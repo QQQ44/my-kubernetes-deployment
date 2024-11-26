@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-crawler-deployment
+spec:
+  replicas: 1  # 设置副本数量，通常为 1
+  selector:
+    matchLabels:
+      app: my-crawler
+  template:
+    metadata:
+      labels:
+        app: my-crawler
+    spec:
+      containers:
+        - name: my-crawler
+          image: gcr.io/v-capitalfx-trading-markets/my-crawler-lead  # 使用正确的镜像名称
+          volumeMounts:
+            - mountPath: /vm/user/data  # 容器内部的挂载路径
+              name: my-host-path-volume  # 挂载的卷名称
+      volumes:
+        - name: my-host-path-volume  # 卷的名称与容器中的 volumeMounts 配对
+          hostPath:
+            path: /download/user/user/vm/user/data  # 宿主机路径，需要确保路径正确
+            type: Directory  # 使用目录类型的卷，确保路径存在
